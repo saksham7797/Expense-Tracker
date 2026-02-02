@@ -2,10 +2,11 @@ package com.saksham_kumar;
 
 public class Expense {
     private int id;
-    String description;
+    private String description;
     private double amount;
     private String category;
     private String date;
+    private String userName;
 
     public Expense() {}
 
@@ -36,6 +37,10 @@ public class Expense {
     public void setDate(String date) {
         this.date = date;
     }
+    
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public int getId() {
         return id;
@@ -55,5 +60,9 @@ public class Expense {
 
     public String getDate() {
         return date;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }

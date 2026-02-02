@@ -33,6 +33,8 @@ public class ExpenseManager {
 
     private void loadFile() {
         if (!f.exists()) return;
+
+        if (f.length() == 0) return;
         
         try {
             expenses = mapper.readValue(f, new TypeReference<List<Expense>>(){});
