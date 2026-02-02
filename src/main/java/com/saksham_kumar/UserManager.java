@@ -36,7 +36,7 @@ public class UserManager {
     }
 
     private void savetoFile() {
-        try     {
+        try {
             mapper.writeValue(f, user);
         } catch (IOException e) {
             System.out.println("Some error occured while saving file.");
@@ -46,7 +46,6 @@ public class UserManager {
     public String addUser(String userName, String password) {
         boolean present = user.stream().anyMatch(obj -> obj.getuserName().equals(userName));
         if(present) {
-            savetoFile();
             return "Username already exists!";
         }
         String encrypted_password = BCrypt.hashpw(password, BCrypt.gensalt());

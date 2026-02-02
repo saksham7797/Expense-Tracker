@@ -10,12 +10,13 @@ public class Expense {
 
     public Expense() {}
 
-    public Expense(int id, String description, double amount, String category, String date) {
+    public Expense(int id, String description, double amount, String category, String date, String userName) {
         this.id = id;
         this.description = description;
         this.amount = amount;
         this.category = category;
         this.date = date;
+        this.userName = userName;
     }
 
     public void setId(int id) {

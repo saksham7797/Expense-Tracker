@@ -23,9 +23,11 @@ public class ExpenseManager {
     }
 
 
-    public String getExpenses() {
+    public String getExpenses(String userName) {
         try {
-            return mapper.writeValueAsString(expenses);
+            List<Expense> lst = expenses.stream().filter(e -> e.getUserName().equals(userName)).collect(Collectors.toList());
+
+            return mapper.writeValueAsString(lst);
         } catch (IOException e) {
             return "[]";
         }
@@ -51,54 +53,61 @@ public class ExpenseManager {
         }
     }
 
-    public String addExpense(String desc, double amount, String category) {
+    public String addExpense(String desc, double amount, String category, String userName) {
         int id = generateID();
         String date = LocalDate.now().toString();
-        expenses.add(new Expense(id, desc, amount, category, date));
+        expenses.add(new Expense(id, desc, amount, category, date, userName));
         savetoFile();
-        return "Task Added!";
+        return "Expense Added!";
     }
 
-    public String deleteExpense(int id) {
-        boolean removed = expenses.removeIf(e -> e.getId() == id);
+    public String deleteExpense(int id, String userName) {
+        boolean removed = expenses.removeIf(e -> e.getId() == id && e.getUserName().equals(userName));
         if(removed) {
             savetoFile();
-            return "Task Deleted";
+            return "Expense Deleted";
         }
-        return "Task not found";
+        return "Expense not Found.";
     }
 
-    public String update_expense(int id, String type, String data) {
+    public String update_expense(int id, String type, String data, String userName) {
         for (Expense obj : expenses) {
-            if(obj.getId() == id) {
+            if(obj.getId() == id && obj.getUserName().equals(userName)) {
                 switch (type.toLowerCase()) {
                     case "description" -> obj.setDescription(data);
                     case "category" -> obj.setCategory(data);
                     case "date" -> obj.setDate(data);
-                    default -> throw new AssertionError();
+                    default -> {return "Invalid Update Type";}
                 }
             }
         }
         savetoFile();
-        return "Tasks Updated!";
+        return "Expenses Updated!";
     }
 
-    public String update_expense(int id, double amt) {
+    public String update_expense(int id, double amt, String userName) {
+        boolean isUpdated = false;
         for (Expense obj : expenses) {
-            if(obj.getId() == id) {
+            if(obj.getId() == id && obj.getUserName().equals(userName)) {
                 obj.setAmount(amt);
+                isUpdated = true;
+                break;
             }
         }
-        savetoFile();
-        return "Amount Updated!";
+        if(isUpdated) {
+            savetoFile();
+            return "Amount Updated!";
+        }
+        return "Expense not found or Acess Denied";
     }
 
-    public String getFilteredExpenses(String type, String value) {
+    public String getFilteredExpenses(String type, String value, String userName) {
         List<Expense> filtered = new ArrayList<>();
         LocalDate today = LocalDate.now();
 
         if ("category".equalsIgnoreCase(type)) {
             filtered = expenses.stream()
+                    .filter(e -> e.getUserName().equals(userName))
                     .filter(e -> e.getCategory().equalsIgnoreCase(value))
                     .collect(Collectors.toList());
         } else if ("filter".equalsIgnoreCase(type)) {
@@ -109,6 +118,7 @@ public class ExpenseManager {
                 default -> today;
             };
             filtered = expenses.stream()
+                    .filter(e -> e.getUserName().equals(userName))
                     .filter(e -> LocalDate.parse(e.getDate()).isAfter(limit) || LocalDate.parse(e.getDate()).isEqual(limit))
                     .collect(Collectors.toList());
         }
