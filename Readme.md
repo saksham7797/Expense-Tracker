@@ -12,6 +12,7 @@ In a world of "Annotation Magic" (Spring Boot, Hibernate), many developers forge
 * Implement **JWT Authentication & Authorization** from scratch.  
 * Design a custom **File-Based Database System** (JSON persistence).  
 * Manage **Password Hashing** and security best practices manually.
+* This project is a part of https://roadmap.sh/projects/expense-tracker-api
 
 ## **⚡ Features**
 
